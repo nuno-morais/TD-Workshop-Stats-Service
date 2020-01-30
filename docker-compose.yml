@@ -4,17 +4,29 @@ services:
   common: &COMMON
     build:
       context: .
+    environment:
+      - AMQP_HOST=rabbitmq.local
+      - AMQP_PORT=5672
+      - USERNAME=test
+      - PASSWORD=test
     links:
-      - mongodb:mongo.local
+      - secure-rabbitmq:rabbitmq.local
     ports:
       - 127.0.0.1:3000:3000
   dev:
     <<: *COMMON
     command: node dist/main.js
 
-  mongodb:
-    image: mongo:latest
-    environment:
-      - MONGODB_DATABASE="apartments-scraper-test"
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: 
+      - 15672:15672
+      - 5672:5672
+  secure-rabbitmq:
+    image: rabbitmq:3-management
     ports:
-      - 27017:27017
+      - 15673:15672
+      - 5673:5672
+    environment: 
+        RABBITMQ_DEFAULT_PASS: "test"
+        RABBITMQ_DEFAULT_USER: "test"
