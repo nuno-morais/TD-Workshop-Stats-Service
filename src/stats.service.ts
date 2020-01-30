@@ -13,7 +13,7 @@ export class StatsService {
     return this.stats[userId] || this.defaultStats;
   }
 
-  public increaseCreated(userId: string) {
+  public increaseCreate(userId: string) {
     const current = this.get(userId);
     this.stats[userId] = { ...current, created: current.created + 1 };
   }

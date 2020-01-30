@@ -13,12 +13,26 @@ export class StatsConsumer {
 
     async consume() {
         try {
-            const queue = 'system_stats';
+            const queue = 'stats';
             const channel = await this.amqp.createChannel();
             await channel.assertQueue(queue);
             Logger.debug(`Consuming: '${queue}'`);
             channel.consume(queue, (msg) => {
                 Logger.debug(` [x] Received ${msg.content.toString()}`);
+                try {
+                    const event = JSON.parse(msg.content.toString());
+                    if (event.name === 'updated') {
+                        this.statsService.increaseUpdate(event.userId);
+                    } else if (event.name === 'deleted') {
+                        this.statsService.increaseDelete(event.userId);
+                    } else if (event.name === 'created') {
+                        this.statsService.increaseCreate(event.userId);
+                    }
+                    Logger.debug(this.statsService.get(event.userId));
+                } catch (e) {
+                    Logger.error(e);
+                }
+
             }, { noAck: true });
         } catch (e) {
             Logger.error(e);
