@@ -21,11 +21,12 @@ export class StatsConsumer {
                 Logger.debug(` [x] Received ${msg.content.toString()}`);
                 try {
                     const event = JSON.parse(msg.content.toString());
-                    if (event.name === 'updated') {
+                    const eventName = event.name.toLocaleLowerCase();
+                    if (eventName === 'updated') {
                         this.statsService.increaseUpdate(event.userId);
-                    } else if (event.name === 'deleted') {
+                    } else if (eventName === 'deleted') {
                         this.statsService.increaseDelete(event.userId);
-                    } else if (event.name === 'created') {
+                    } else if (eventName === 'created') {
                         this.statsService.increaseCreate(event.userId);
                     }
                     Logger.debug(this.statsService.get(event.userId));

@@ -5,12 +5,12 @@ services:
     build:
       context: .
     environment:
-      - AMQP_HOST=rabbitmq.local
+      - AMQP_HOST=secure-rabbitmq
       - AMQP_PORT=5672
       - USERNAME=test
       - PASSWORD=test
-    links:
-      - secure-rabbitmq:rabbitmq.local
+    depends_on:
+      - secure-rabbitmq
     ports:
       - 127.0.0.1:3000:3000
   dev:
