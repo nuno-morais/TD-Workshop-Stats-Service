@@ -6,7 +6,7 @@ services:
       context: .
     environment:
       - AMQP_HOST=secure-rabbitmq
-      - AMQP_PORT=5672
+      - AMQP_PORT=5673
       - USERNAME=test
       - PASSWORD=test
     depends_on:
